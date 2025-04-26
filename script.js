@@ -35,7 +35,7 @@ if (timeLeft <= 0) {
 resetButton.addEventListener('click', () => {
     clearInterval(timer);
     isRunning = false;
-    timeLeft = 1200; // Reset to 20 minutes
+    timeLeft = 30; // Reset to 20 minutes
     updateTimerDisplay();
     updateTitle(); // Update title when reset
     startPauseButton.textContent = 'Start';
