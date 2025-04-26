@@ -15,11 +15,13 @@ startPauseButton.addEventListener('click', () => {
         startPauseButton.textContent = 'Start';
     } else {
         timer = setInterval(() => {
-            if (timeLeft <= 0) {
-                clearInterval(timer);
-                timerEndSound.play(); // Play sound when timer ends
-                document.title = ''; // Reset title when timer ends
-            } else {
+if (timeLeft === 0) {
+    timerEndSound.play(); // Play sound once when timer first hits zero
+}
+if (timeLeft <= 0) {
+    clearInterval(timer);
+    document.title = '';
+} else {
                 timeLeft--;
                 updateTimerDisplay();
                 updateTitle(); // Update tab title with remaining time
