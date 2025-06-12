@@ -1,6 +1,6 @@
 let timer;
 let isRunning = false;
-let timeLeft = 7; // 20 minutes in seconds
+let timeLeft = 1800; // 20 minutes in seconds
 
 const startPauseButton = document.getElementById('start-pause');
 const resetButton = document.getElementById('reset');
@@ -35,7 +35,7 @@ if (timeLeft <= 0) {
 resetButton.addEventListener('click', () => {
     clearInterval(timer);
     isRunning = false;
-    timeLeft = 7; // Reset to 20 minutes
+    timeLeft = 1800; // Reset to 20 minutes
     updateTimerDisplay();
     updateTitle(); // Update title when reset
     startPauseButton.textContent = 'Start';
