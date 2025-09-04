@@ -1,6 +1,6 @@
 let timer;
 let isRunning = false;
-let timeLeft = 1800; // 20 minutes in seconds
+let timeLeft = 1200; // 20 minutes in seconds
 
 const startPauseButton = document.getElementById('start-pause');
 const resetButton = document.getElementById('reset');
