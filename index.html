@@ -45,5 +45,27 @@
   <audio id="timer-end-sound" preload="auto">
     <source src="https://cdn.pixabay.com/download/audio/2023/07/19/audio_25fe3bfc7c.mp3?filename=forest-birds-nature-sound-145204.mp3" type="audio/mp3">
   </audio>
+<script>
+  (function loadYT() {
+    const tag = document.createElement('script');
+    tag.src = "https://www.youtube.com/iframe_api";
+    document.head.appendChild(tag);
+  })();
+
+  let ytPlayer;
+
+  // Called by the YT API when ready (must be global)
+  function onYouTubeIframeAPIReady() {
+    ytPlayer = new YT.Player('focus-video', {
+      events: {
+        onReady: (e) => {
+          // Start muted & playing (matches your URL params)
+          e.target.mute();
+          e.target.playVideo();
+        }
+      }
+    });
+  }
+</script>
 </body>
 </html>
