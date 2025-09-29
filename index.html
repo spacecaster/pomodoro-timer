@@ -9,29 +9,33 @@
 <body>
   <div class="container">
     <div class="right-column">
-<iframe
-  id="focus-video"
-  width="700"
-  height="394"
-  src="https://www.youtube.com/embed/9Y8OA70vmeY?autoplay=1&mute=1&controls=0&loop=1&playlist=9Y8OA70vmeY&enablejsapi=1&playsinline=1"
-  title="YouTube video player"
-  frameborder="0"
-  allow="autoplay; encrypted-media; picture-in-picture; web-share"
-  referrerpolicy="strict-origin-when-cross-origin"
-  allowfullscreen>
-</iframe>
+      <iframe
+        id="focus-video"
+        width="700"
+        height="394"
+        src="https://www.youtube.com/embed/9Y8OA70vmeY?autoplay=1&mute=1&controls=0&loop=1&playlist=9Y8OA70vmeY&enablejsapi=1&playsinline=1"
+        title="YouTube video player"
+        frameborder="0"
+        allow="autoplay; encrypted-media; picture-in-picture; web-share"
+        referrerpolicy="strict-origin-when-cross-origin"
+        allowfullscreen>
+      </iframe>
     </div>
+
     <div class="left-column">
       <div class="timer-box">
-        <!-- NEW: presets -->
+        <!-- Presets -->
         <div class="presets" id="presets" role="tablist" aria-label="Timer presets">
           <button id="mode-20" class="preset active" data-mode="work20" role="tab" aria-selected="true">20:00 Focus</button>
           <button id="mode-7"  class="preset" data-mode="break7" role="tab" aria-selected="false">7:00 Break</button>
         </div>
 
+        <!-- Timer -->
         <div id="timer" aria-live="polite" aria-atomic="true">
           <span id="minutes">20</span>:<span id="seconds">00</span>
         </div>
+
+        <!-- Controls -->
         <div class="buttons">
           <button id="start-pause">Start</button>
           <button id="reset">Reset</button>
@@ -45,27 +49,48 @@
   <audio id="timer-end-sound" preload="auto">
     <source src="https://cdn.pixabay.com/download/audio/2023/07/19/audio_25fe3bfc7c.mp3?filename=forest-birds-nature-sound-145204.mp3" type="audio/mp3">
   </audio>
-<script>
-  (function loadYT() {
-    const tag = document.createElement('script');
-    tag.src = "https://www.youtube.com/iframe_api";
-    document.head.appendChild(tag);
-  })();
 
-  let ytPlayer;
+  <!-- YouTube API -->
+  <script>
+    (function loadYT() {
+      const tag = document.createElement('script');
+      tag.src = "https://www.youtube.com/iframe_api";
+      document.head.appendChild(tag);
+    })();
 
-  // Called by the YT API when ready (must be global)
-  function onYouTubeIframeAPIReady() {
-    ytPlayer = new YT.Player('focus-video', {
-      events: {
-        onReady: (e) => {
-          // Start muted & playing (matches your URL params)
-          e.target.mute();
-          e.target.playVideo();
+    let ytPlayer;
+
+    // Called by the YT API when ready
+    function onYouTubeIframeAPIReady() {
+      ytPlayer = new YT.Player('focus-video', {
+        events: {
+          onReady: (e) => {
+            // Start muted & playing (matches URL params)
+            e.target.mute();
+            e.target.playVideo();
+          }
         }
+      });
+    }
+
+    // Unmute on the FIRST Start click
+    document.addEventListener("DOMContentLoaded", () => {
+      const btn = document.getElementById('start-pause');
+      if (!btn) return;
+
+      function unmuteOnFirstStart() {
+        if (window.ytPlayer && typeof ytPlayer.unMute === 'function') {
+          try {
+            ytPlayer.unMute();
+            ytPlayer.setVolume(100);
+            ytPlayer.playVideo();
+          } catch (e) { /* ignore */ }
+        }
+        btn.removeEventListener('click', unmuteOnFirstStart);
       }
+
+      btn.addEventListener('click', unmuteOnFirstStart, { once: true });
     });
-  }
-</script>
+  </script>
 </body>
 </html>
