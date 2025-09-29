@@ -39,7 +39,6 @@
         <div class="buttons">
           <button id="start-pause">Start</button>
           <button id="reset">Reset</button>
-          <!-- NEW: Sound toggle -->
           <button id="toggle-sound" aria-pressed="false" title="Toggle sound (M)">Sound: Off</button>
         </div>
       </div>
@@ -53,9 +52,9 @@
     <source src="https://cdn.pixabay.com/download/audio/2023/07/19/audio_25fe3bfc7c.mp3?filename=forest-birds-nature-sound-145204.mp3" type="audio/mp3">
   </audio>
 
-  <!-- YouTube API + controls -->
+  <!-- YouTube API + sound control -->
   <script>
-    // Load the YouTube IFrame API
+    // Load YT IFrame API
     (function loadYT() {
       const tag = document.createElement('script');
       tag.src = "https://www.youtube.com/iframe_api";
@@ -64,77 +63,67 @@
 
     let ytPlayer;
 
-    // Called by the YT API when ready
+    // Called by YT API
     function onYouTubeIframeAPIReady() {
       ytPlayer = new YT.Player('focus-video', {
         events: {
           onReady: (e) => {
-            e.target.mute();      // start muted so autoplay works
-            e.target.playVideo(); // begin playback
-            syncSoundLabel();     // reflect current mute state in the button
+            e.target.mute();      // autoplay needs mute
+            e.target.playVideo(); // start playback
+            updateSoundLabel();   // reflect "Off"
           }
         }
       });
     }
 
-    // Helper: update the Sound button label/state
-    function syncSoundLabel() {
-      const btn = document.getElementById('toggle-sound');
-      if (!btn || !ytPlayer) return;
-      const muted = ytPlayer.isMuted();
-      btn.textContent = muted ? 'Sound: Off' : 'Sound: On';
-      btn.setAttribute('aria-pressed', muted ? 'false' : 'true');
+    // --- Sound helpers ---
+    function setSound(on) {
+      if (!ytPlayer) return;
+      try {
+        if (on) {
+          ytPlayer.unMute();
+          ytPlayer.setVolume(100);
+          ytPlayer.playVideo();
+        } else {
+          ytPlayer.mute();
+        }
+      } catch (_) {}
+      updateSoundLabel();
     }
 
-    // Unmute on the FIRST Start click (user gesture)
-    document.addEventListener("DOMContentLoaded", () => {
+    function isSoundOn() {
+      return ytPlayer && typeof ytPlayer.isMuted === 'function' ? !ytPlayer.isMuted() : false;
+    }
+
+    function updateSoundLabel() {
+      const btn = document.getElementById('toggle-sound');
+      if (!btn) return;
+      const on = isSoundOn();
+      btn.textContent = on ? 'Sound: On' : 'Sound: Off';
+      btn.setAttribute('aria-pressed', on ? 'true' : 'false');
+    }
+
+    // Wire up controls after DOM ready
+    document.addEventListener('DOMContentLoaded', () => {
       const startBtn = document.getElementById('start-pause');
       const soundBtn = document.getElementById('toggle-sound');
 
-      function unmuteOnFirstStart() {
-        if (window.ytPlayer && typeof ytPlayer.unMute === 'function') {
-          try {
-            ytPlayer.unMute();
-            ytPlayer.setVolume(100);
-            ytPlayer.playVideo();
-            syncSoundLabel();
-          } catch (e) { /* ignore */ }
-        }
-        startBtn.removeEventListener('click', unmuteOnFirstStart);
+      // Unmute on first Start click (user gesture enables audio)
+      if (startBtn) {
+        startBtn.addEventListener('click', function once() {
+          setSound(true);
+          startBtn.removeEventListener('click', once);
+        }, { once: true });
       }
-      if (startBtn) startBtn.addEventListener('click', unmuteOnFirstStart, { once: true });
 
       // Sound toggle button
       if (soundBtn) {
-        soundBtn.addEventListener('click', () => {
-          if (!ytPlayer) return;
-          try {
-            if (ytPlayer.isMuted()) {
-              ytPlayer.unMute();
-              ytPlayer.setVolume(100);
-              ytPlayer.playVideo();
-            } else {
-              ytPlayer.mute();
-            }
-          } catch (e) { /* ignore */ }
-          syncSoundLabel();
-        });
+        soundBtn.addEventListener('click', () => setSound(!isSoundOn()));
       }
 
       // Keyboard: M to toggle sound
       window.addEventListener('keydown', (e) => {
-        if ((e.key === 'm' || e.key === 'M') && ytPlayer) {
-          try {
-            if (ytPlayer.isMuted()) {
-              ytPlayer.unMute();
-              ytPlayer.setVolume(100);
-              ytPlayer.playVideo();
-            } else {
-              ytPlayer.mute();
-            }
-          } catch (e) { /* ignore */ }
-          syncSoundLabel();
-        }
+        if (e.key === 'm' || e.key === 'M') setSound(!isSoundOn());
       });
     });
   </script>
