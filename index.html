@@ -1,31 +1,39 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Pomodoro Timer</title>
-    <link rel="stylesheet" href="styles.css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Pomodoro Timer</title>
+  <link rel="stylesheet" href="styles.css"/>
 </head>
 <body>
-    <div class="container">
-        <div class="right-column">
-            <iframe width="700" height="394" src="https://www.youtube.com/embed/UE8VKhM9KBs?si=VX89Dt5cn79p2le0" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
-        </div>
-        <div class="left-column">
-            <div class="timer-box">
-                <div id="timer">
-                    <span id="minutes">20</span>:<span id="seconds">00</span>
-                </div>
-                <div class="buttons">
-                    <button id="start-pause">Start</button>
-                    <button id="reset">Reset</button>
-                </div>
-            </div>
-        </div>
+  <div class="container">
+    <div class="right-column">
+      <iframe width="700" height="394" src="https://www.youtube.com/embed/UE8VKhM9KBs?si=VX89Dt5cn79p2le0" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
     </div>
-    <script src="script.js"></script>
-<audio id="timer-end-sound" preload="auto">
-  <source src="https://cdn.pixabay.com/download/audio/2023/07/19/audio_25fe3bfc7c.mp3?filename=forest-birds-nature-sound-145204.mp3" type="audio/mp3">
-</audio>
+    <div class="left-column">
+      <div class="timer-box">
+        <!-- NEW: presets -->
+        <div class="presets" id="presets" role="tablist" aria-label="Timer presets">
+          <button id="mode-20" class="preset active" data-mode="work20" role="tab" aria-selected="true">20:00 Focus</button>
+          <button id="mode-7"  class="preset" data-mode="break7" role="tab" aria-selected="false">7:00 Break</button>
+        </div>
+
+        <div id="timer" aria-live="polite" aria-atomic="true">
+          <span id="minutes">20</span>:<span id="seconds">00</span>
+        </div>
+        <div class="buttons">
+          <button id="start-pause">Start</button>
+          <button id="reset">Reset</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+
+  <audio id="timer-end-sound" preload="auto">
+    <source src="https://cdn.pixabay.com/download/audio/2023/07/19/audio_25fe3bfc7c.mp3?filename=forest-birds-nature-sound-145204.mp3" type="audio/mp3">
+  </audio>
 </body>
 </html>
