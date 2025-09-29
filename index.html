@@ -63,14 +63,13 @@
 
     let ytPlayer;
 
-    // Called by YT API
     function onYouTubeIframeAPIReady() {
       ytPlayer = new YT.Player('focus-video', {
         events: {
           onReady: (e) => {
-            e.target.mute();      // autoplay needs mute
-            e.target.playVideo(); // start playback
-            updateSoundLabel();   // reflect "Off"
+            e.target.mute();
+            e.target.playVideo();
+            updateSoundLabel();
           }
         }
       });
@@ -91,24 +90,20 @@
       updateSoundLabel();
     }
 
-    function isSoundOn() {
-      return ytPlayer && typeof ytPlayer.isMuted === 'function' ? !ytPlayer.isMuted() : false;
-    }
-
     function updateSoundLabel() {
       const btn = document.getElementById('toggle-sound');
-      if (!btn) return;
-      const on = isSoundOn();
-      btn.textContent = on ? 'Sound: On' : 'Sound: Off';
-      btn.setAttribute('aria-pressed', on ? 'true' : 'false');
+      if (!btn || !ytPlayer) return;
+      const soundOn = ytPlayer && !ytPlayer.isMuted();
+      btn.textContent = soundOn ? 'Sound: On' : 'Sound: Off';
+      btn.setAttribute('aria-pressed', soundOn ? 'true' : 'false');
     }
 
-    // Wire up controls after DOM ready
+    // Wire up
     document.addEventListener('DOMContentLoaded', () => {
       const startBtn = document.getElementById('start-pause');
       const soundBtn = document.getElementById('toggle-sound');
 
-      // Unmute on first Start click (user gesture enables audio)
+      // Unmute on first Start click
       if (startBtn) {
         startBtn.addEventListener('click', function once() {
           setSound(true);
@@ -118,12 +113,18 @@
 
       // Sound toggle button
       if (soundBtn) {
-        soundBtn.addEventListener('click', () => setSound(!isSoundOn()));
+        soundBtn.addEventListener('click', () => {
+          const currentlyOn = ytPlayer && !ytPlayer.isMuted();
+          setSound(!currentlyOn);
+        });
       }
 
       // Keyboard: M to toggle sound
       window.addEventListener('keydown', (e) => {
-        if (e.key === 'm' || e.key === 'M') setSound(!isSoundOn());
+        if ((e.key === 'm' || e.key === 'M') && ytPlayer) {
+          const currentlyOn = !ytPlayer.isMuted();
+          setSound(!currentlyOn);
+        }
       });
     });
   </script>
