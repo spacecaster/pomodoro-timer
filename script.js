@@ -54,7 +54,7 @@ function updateTitle() {
 
 // --- Preset buttons ---
 document.getElementById('mode-20').addEventListener('click', () => setMode('work20'));
-document.getElementById('mode-7').addEventListener('click',  () => setMode('break5'));
+document.getElementById('mode-5').addEventListener('click',  () => setMode('break5'));
 
 // --- Timer controls ---
 startPauseButton.addEventListener('click', () => {
