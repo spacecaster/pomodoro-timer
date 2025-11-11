@@ -4,7 +4,7 @@ let isRunning = false;
 // --- Durations (seconds) ---
 const DURATIONS = {
   work20: 20 * 60,   // 20:00 Focus
-  break7: 7 * 60     // 7:00 Break
+  break5: 5 * 60     // 5:00 Break
 };
 
 // Current mode & time
@@ -54,7 +54,7 @@ function updateTitle() {
 
 // --- Preset buttons ---
 document.getElementById('mode-20').addEventListener('click', () => setMode('work20'));
-document.getElementById('mode-7').addEventListener('click',  () => setMode('break7'));
+document.getElementById('mode-7').addEventListener('click',  () => setMode('break5'));
 
 // --- Timer controls ---
 startPauseButton.addEventListener('click', () => {
